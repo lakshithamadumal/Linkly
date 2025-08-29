@@ -53,11 +53,16 @@ export default function LoginScreen() {
               <TouchableOpacity
                 style={styles.loginButton}
                 onPress={() => {
-                  Toast.show({
+                  Dialog.show({
                     type: ALERT_TYPE.SUCCESS,
                     title: "Success",
                     textBody: "Login Successful!",
                   });
+
+                  setTimeout(() => {
+                    Dialog.hide();
+                    console.log("User confirmed signin");
+                  }, 2000);
                 }}
               >
                 <Text style={styles.loginButtonText}>Sign In</Text>
