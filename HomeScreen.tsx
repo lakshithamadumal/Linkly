@@ -56,9 +56,18 @@ export default function HomeScreen() {
               onLongPress={() => {
                 console.log("Link long pressed:", item.url);
                 Dialog.show({
-                  type: ALERT_TYPE.SUCCESS,
-                  title: "Deleted",
-                  textBody: "Delete Successful!",
+                  type: ALERT_TYPE.WARNING,
+                  title: "Delete Link",
+                  textBody: "Are you sure you want to delete this link?",
+                  button: "Yes",
+                  onPressButton: () => {
+                    console.log("Link Deleted");
+                    Dialog.show({
+                      type: ALERT_TYPE.SUCCESS,
+                      title: "Deleted",
+                      textBody: "Link delete Successful!",
+                    });
+                  },
                 });
               }}
             >
