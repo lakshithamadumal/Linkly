@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Image,
 } from "react-native";
 import {
   ArrowLeft,
@@ -17,108 +18,155 @@ import {
   FileText,
   Image as ImageIcon,
 } from "lucide-react-native";
+import * as ImagePicker from "expo-image-picker";
+import {
+  ALERT_TYPE,
+  Dialog,
+  AlertNotificationRoot,
+  Toast,
+} from "react-native-alert-notification";
 
 export default function AddLinkScreen() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [url, setUrl] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [pickedImage, setPickedImage] = useState(null);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1], // <-- 1:1 crop
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setPickedImage(result.assets[0].uri);
+    }
+  };
 
   return (
-    <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton}>
-          <ArrowLeft size={24} color="#1a1a2e" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Add New Link</Text>
-        <TouchableOpacity style={styles.saveButton}>
-          <Save size={20} color="#ffffffff" />
-        </TouchableOpacity>
-      </View>
-
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.keyboardView}
-      >
-        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          {/* Title Input */}
-          <View style={styles.inputSection}>
-            <View style={styles.inputHeader}>
-              <Type size={20} color="#667eea" />
-              <Text style={styles.inputLabel}>Title *</Text>
-            </View>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter link title"
-              placeholderTextColor="#999"
-              value={title}
-              onChangeText={setTitle}
-              maxLength={100}
-            />
-          </View>
-
-          {/* Description Input */}
-          <View style={styles.inputSection}>
-            <View style={styles.inputHeader}>
-              <FileText size={20} color="#667eea" />
-              <Text style={styles.inputLabel}>Description (Optional)</Text>
-            </View>
-            <TextInput
-              style={[styles.input, styles.textArea]}
-              placeholder="Enter description"
-              placeholderTextColor="#999"
-              value={description}
-              onChangeText={setDescription}
-              multiline
-              numberOfLines={4}
-              maxLength={500}
-            />
-          </View>
-
-          {/* URL Input */}
-          <View style={styles.inputSection}>
-            <View style={styles.inputHeader}>
-              <Link size={20} color="#667eea" />
-              <Text style={styles.inputLabel}>URL *</Text>
-            </View>
-            <TextInput
-              style={styles.input}
-              placeholder="https://example.com"
-              placeholderTextColor="#999"
-              value={url}
-              onChangeText={setUrl}
-              keyboardType="url"
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
-          </View>
-
-          {/* Image URL Input */}
-          <View style={styles.inputSection}>
-            <View style={styles.inputHeader}>
-              <ImageIcon size={20} color="#667eea" />
-              <Text style={styles.inputLabel}>Image URL (Optional)</Text>
-            </View>
-            <TextInput
-              style={styles.input}
-              placeholder="https://example.com/image.jpg"
-              placeholderTextColor="#999"
-              value={imageUrl}
-              onChangeText={setImageUrl}
-              keyboardType="url"
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
-          </View>
-
-          {/* Save Button */}
-          <TouchableOpacity style={styles.saveButtonLarge}>
-            <Text style={styles.saveButtonText}>Save Link</Text>
+    <AlertNotificationRoot>
+      <View style={styles.container}>
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.backButton}>
+            <ArrowLeft size={24} color="#1a1a2e" />
           </TouchableOpacity>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </View>
+          <Text style={styles.headerTitle}>Add New Link</Text>
+          <TouchableOpacity style={styles.saveButton}>
+            <Save size={20} color="#ffffffff" />
+          </TouchableOpacity>
+        </View>
+
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.keyboardView}
+        >
+          <ScrollView
+            style={styles.content}
+            showsVerticalScrollIndicator={false}
+          >
+            {/* Title Input */}
+            <View style={styles.inputSection}>
+              <View style={styles.inputHeader}>
+                <Type size={20} color="#667eea" />
+                <Text style={styles.inputLabel}>Title *</Text>
+              </View>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter link title"
+                placeholderTextColor="#999"
+                value={title}
+                onChangeText={setTitle}
+                maxLength={100}
+              />
+            </View>
+
+            {/* Description Input */}
+            <View style={styles.inputSection}>
+              <View style={styles.inputHeader}>
+                <FileText size={20} color="#667eea" />
+                <Text style={styles.inputLabel}>Description (Optional)</Text>
+              </View>
+              <TextInput
+                style={[styles.input, styles.textArea]}
+                placeholder="Enter description"
+                placeholderTextColor="#999"
+                value={description}
+                onChangeText={setDescription}
+                multiline
+                numberOfLines={4}
+                maxLength={500}
+              />
+            </View>
+
+            {/* URL Input */}
+            <View style={styles.inputSection}>
+              <View style={styles.inputHeader}>
+                <Link size={20} color="#667eea" />
+                <Text style={styles.inputLabel}>URL *</Text>
+              </View>
+              <TextInput
+                style={styles.input}
+                placeholder="https://example.com"
+                placeholderTextColor="#999"
+                value={url}
+                onChangeText={setUrl}
+                keyboardType="url"
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+            </View>
+
+            {/* Image URL Input */}
+            <View style={styles.inputSection}>
+              <View style={styles.inputHeader}>
+                <ImageIcon size={20} color="#667eea" />
+                <Text style={styles.inputLabel}>Image (Optional)</Text>
+              </View>
+              <TouchableOpacity
+                style={styles.imagePickerBox}
+                onPress={pickImage}
+                activeOpacity={0.7}
+              >
+                {pickedImage ? (
+                  <Image
+                    source={{ uri: pickedImage }}
+                    style={styles.imagePreview}
+                  />
+                ) : (
+                  <View style={styles.plusIconContainer}>
+                    <ImageIcon size={36} color="#b4b4b4" />
+                    <Text style={styles.imagePickerText}>Add Image</Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+            </View>
+
+            {/* Save Button */}
+            <TouchableOpacity
+              style={styles.saveButtonLarge}
+              onPress={() => {
+                Dialog.show({
+                  type: ALERT_TYPE.SUCCESS,
+                  title: "Success",
+                  textBody: "Link saved successfully!",
+                });
+
+                setTimeout(() => {
+                  Dialog.hide();
+                  console.log("link saved!");
+                }, 2000);
+              }}
+            >
+              <Text style={styles.saveButtonText}>Save Link</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </View>
+    </AlertNotificationRoot>
   );
 }
 
@@ -217,5 +265,32 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     fontSize: 18,
     fontWeight: "600",
+  },
+  imagePickerBox: {
+    width: "100%",
+    aspectRatio: 1, // <-- add this for 1:1 box
+    borderRadius: 14,
+    borderWidth: 2,
+    borderColor: "#d1d5db",
+    backgroundColor: "#f3f4f6",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 6,
+    marginBottom: 4,
+    overflow: "hidden",
+  },
+  plusIconContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  imagePickerText: {
+    color: "#b4b4b4",
+    fontSize: 15,
+    marginTop: 6,
+  },
+  imagePreview: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
 });
