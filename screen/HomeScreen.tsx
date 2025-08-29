@@ -22,7 +22,7 @@ const mockLinks = [
     title: "Portfolio",
     description: "My coding projects and repositories",
     url: "https://iamlaky.online/",
-    image: require("./assets/link.png"),
+    image: require("../assets/link.png"),
   },
 ];
 
@@ -35,7 +35,7 @@ export default function HomeScreen() {
             <Text style={styles.headerTitle}>My Links</Text>
             <TouchableOpacity style={styles.profileButton}>
               <Image
-                source={require("./assets/avatar/avatar_1.png")}
+                source={require("../assets/avatar/avatar_1.png")}
                 style={styles.profileImage}
               />
             </TouchableOpacity>

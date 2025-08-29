@@ -12,7 +12,7 @@ export default function AccountScreen() {
     {
       Name: "Lakshitha Madumal",
       Email: "mandujayaweera2003@gmail.com",
-      Avatar: require("./assets/avatar/avatar_1.png"), // මෙහෙම වෙනස් කරන්න
+      Avatar: require("../assets/avatar/avatar_1.png"), // මෙහෙම වෙනස් කරන්න
     },
   ];
 

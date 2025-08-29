@@ -12,7 +12,7 @@ export default function LinkPreviewScreen() {
       title: "Portfolio",
       description: "My coding projects and repositories",
       url: "https://iamlaky.online/",
-      image: require("./assets/link.png"),
+      image: require("../assets/link.png"),
     },
   ];
 

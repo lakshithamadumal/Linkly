@@ -19,18 +19,18 @@ import {
 } from "react-native-alert-notification";
 
 const avatarImages = [
-  require("./assets/avatar/avatar_1.png"),
-  require("./assets/avatar/avatar_2.png"),
-  require("./assets/avatar/avatar_3.png"),
-  require("./assets/avatar/avatar_4.png"),
-  require("./assets/avatar/avatar_5.png"),
-  require("./assets/avatar/avatar_6.png"),
-  require("./assets/avatar/avatar_7.png"),
-  require("./assets/avatar/avatar_8.png"),
-  require("./assets/avatar/avatar_9.png"),
-  require("./assets/avatar/avatar_10.png"),
-  require("./assets/avatar/avatar_11.png"),
-  require("./assets/avatar/avatar_12.png"),
+  require("../assets/avatar/avatar_1.png"),
+  require("../assets/avatar/avatar_2.png"),
+  require("../assets/avatar/avatar_3.png"),
+  require("../assets/avatar/avatar_4.png"),
+  require("../assets/avatar/avatar_5.png"),
+  require("../assets/avatar/avatar_6.png"),
+  require("../assets/avatar/avatar_7.png"),
+  require("../assets/avatar/avatar_8.png"),
+  require("../assets/avatar/avatar_9.png"),
+  require("../assets/avatar/avatar_10.png"),
+  require("../assets/avatar/avatar_11.png"),
+  require("../assets/avatar/avatar_12.png"),
 ];
 
 export default function SignupScreen() {
