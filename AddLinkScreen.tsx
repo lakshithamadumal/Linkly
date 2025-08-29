@@ -37,7 +37,7 @@ export default function AddLinkScreen() {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [1, 1], // <-- 1:1 crop
+      aspect: [1, 1],
       quality: 1,
     });
 
@@ -49,7 +49,6 @@ export default function AddLinkScreen() {
   return (
     <AlertNotificationRoot>
       <View style={styles.container}>
-        {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity style={styles.backButton}>
             <ArrowLeft size={24} color="#1a1a2e" />
@@ -68,7 +67,6 @@ export default function AddLinkScreen() {
             style={styles.content}
             showsVerticalScrollIndicator={false}
           >
-            {/* Title Input */}
             <View style={styles.inputSection}>
               <View style={styles.inputHeader}>
                 <Type size={20} color="#667eea" />
@@ -84,7 +82,6 @@ export default function AddLinkScreen() {
               />
             </View>
 
-            {/* Description Input */}
             <View style={styles.inputSection}>
               <View style={styles.inputHeader}>
                 <FileText size={20} color="#667eea" />
@@ -102,7 +99,6 @@ export default function AddLinkScreen() {
               />
             </View>
 
-            {/* URL Input */}
             <View style={styles.inputSection}>
               <View style={styles.inputHeader}>
                 <Link size={20} color="#667eea" />
@@ -120,7 +116,6 @@ export default function AddLinkScreen() {
               />
             </View>
 
-            {/* Image URL Input */}
             <View style={styles.inputSection}>
               <View style={styles.inputHeader}>
                 <ImageIcon size={20} color="#667eea" />
@@ -145,7 +140,6 @@ export default function AddLinkScreen() {
               </TouchableOpacity>
             </View>
 
-            {/* Save Button */}
             <TouchableOpacity
               style={styles.saveButtonLarge}
               onPress={() => {
