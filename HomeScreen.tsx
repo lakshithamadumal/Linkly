@@ -5,75 +5,100 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
+  Linking,
 } from "react-native";
-import { Plus, ExternalLink } from "lucide-react-native";
+import { Plus, ExternalLink, ArrowUpRight } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import {
+  ALERT_TYPE,
+  Dialog,
+  AlertNotificationRoot,
+  Toast,
+} from "react-native-alert-notification";
 
 const mockLinks = [
   {
     id: "1",
-    title: "GitHub",
+    title: "Portfolio",
     description: "My coding projects and repositories",
-    url: "https://github.com",
-    image:
-      "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+    url: "https://iamlaky.online/",
+    image: require("./assets/link.png"),
   },
 ];
 
 export default function HomeScreen() {
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.headerContent}>
-          <Text style={styles.headerTitle}>My Links</Text>
-          <TouchableOpacity style={styles.profileButton}>
-            <Image
-              source={require("./assets/avatar/avatar_1.png")}
-              style={styles.profileImage}
-            />
-          </TouchableOpacity>
+    <AlertNotificationRoot>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.headerContent}>
+            <Text style={styles.headerTitle}>My Links</Text>
+            <TouchableOpacity style={styles.profileButton}>
+              <Image
+                source={require("./assets/avatar/avatar_1.png")}
+                style={styles.profileImage}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
 
-      <FlatList
-        style={{ width: "100%" }}
-        data={mockLinks}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity style={styles.linkCard}>
-            <View style={styles.linkContent}>
-              {item.image ? (
-                <Image source={{ uri: item.image }} style={styles.linkImage} />
-              ) : (
-                <View style={styles.linkImagePlaceholder}>
-                  <ExternalLink size={24} color="#667eea" />
+        <FlatList
+          style={{ width: "100%" }}
+          data={mockLinks}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.linkCard}
+              activeOpacity={0.9}
+              onPress={() => {
+                console.log("Link pressed:", item.url);
+              }}
+              onLongPress={() => {
+                console.log("Link long pressed:", item.url);
+                Dialog.show({
+                  type: ALERT_TYPE.SUCCESS,
+                  title: "Deleted",
+                  textBody: "Delete Successful!",
+                });
+              }}
+            >
+              <View style={styles.linkContent}>
+                {item.image ? (
+                  <Image source={item.image} style={styles.linkImage} />
+                ) : (
+                  <View style={styles.linkImagePlaceholder}>
+                    <ExternalLink size={24} color="#667eea" />
+                  </View>
+                )}
+                <View style={styles.linkInfo}>
+                  <Text style={styles.linkTitle}>{item.title}</Text>
+                  <Text style={styles.linkUrl} numberOfLines={1}>
+                    {item.url}
+                  </Text>
                 </View>
-              )}
-              <View style={styles.linkInfo}>
-                <Text style={styles.linkTitle}>{item.title}</Text>
-                <Text style={styles.linkDescription} numberOfLines={2}>
-                  {item.description}
-                </Text>
-                <Text style={styles.linkUrl} numberOfLines={1}>
-                  {item.url}
-                </Text>
+                <TouchableOpacity
+                  style={styles.goButton}
+                  onPress={() => Linking.openURL(item.url)}
+                >
+                  <ArrowUpRight size={22} color="#667eea" />
+                </TouchableOpacity>
               </View>
-            </View>
-          </TouchableOpacity>
-        )}
-      />
+            </TouchableOpacity>
+          )}
+        />
 
-      <TouchableOpacity style={styles.floatingButtonContainer}>
-        <LinearGradient
-          colors={["#667eea", "#764ba2"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.floatingButton}
-        >
-          <Plus size={24} color="#fff" />
-        </LinearGradient>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity style={styles.floatingButtonContainer}>
+          <LinearGradient
+            colors={["#00C6FF", "#0072FF"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.floatingButton}
+          >
+            <Plus size={24} color="#fff" />
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
+    </AlertNotificationRoot>
   );
 }
 
@@ -202,6 +227,14 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  goButton: {
+    padding: 8,
+    borderRadius: 8,
+    backgroundColor: "#f1f5f9",
+    marginLeft: 8,
     justifyContent: "center",
     alignItems: "center",
   },
