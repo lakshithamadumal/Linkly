@@ -98,7 +98,7 @@ export default function SignupScreen() {
                 Toast.show({
                     type: ALERT_TYPE.SUCCESS,
                     title: "Success",
-                    textBody: "Registation successful!",
+                    textBody: "Registation Successful!",
                   });
               }}>
                 <Text style={styles.signupButtonText}>Create Account</Text>

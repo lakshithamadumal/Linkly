@@ -56,7 +56,7 @@ export default function LoginScreen() {
                   Toast.show({
                     type: ALERT_TYPE.SUCCESS,
                     title: "Success",
-                    textBody: "Login successful!",
+                    textBody: "Login Successful!",
                   });
                 }}
               >
