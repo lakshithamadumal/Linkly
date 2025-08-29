@@ -94,13 +94,21 @@ export default function SignupScreen() {
                 />
               </View>
 
-              <TouchableOpacity style={styles.signupButton} onPress={() => {
-                Toast.show({
+              <TouchableOpacity
+                style={styles.signupButton}
+                onPress={() => {
+                  Dialog.show({
                     type: ALERT_TYPE.SUCCESS,
                     title: "Success",
                     textBody: "Registation Successful!",
                   });
-              }}>
+
+                  setTimeout(() => {
+                    Dialog.hide();
+                    console.log("User confirmed registeration");
+                  }, 2000);
+                }}
+              >
                 <Text style={styles.signupButtonText}>Create Account</Text>
               </TouchableOpacity>
 
