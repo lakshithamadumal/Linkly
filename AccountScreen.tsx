@@ -41,9 +41,13 @@ export default function AccountScreen() {
           style={styles.logoutButton}
           onPress={() => {
             Dialog.show({
-              type: ALERT_TYPE.SUCCESS,
-              title: "Success",
-              textBody: "Logout Successful!",
+              type: ALERT_TYPE.WARNING,
+              title: "Confirm Logout",
+              textBody: "Are you sure you want to logout?",
+              button: "Yes",
+              onPressButton: () => {
+                console.log("User confirmed logout");
+              },
             });
           }}
         >
