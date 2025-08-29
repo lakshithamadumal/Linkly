@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
-import { ArrowLeft, LogOut } from "lucide-react-native";
+import { ArrowLeft, LogOut, Save } from "lucide-react-native";
 
 export default function AccountScreen() {
   const Account = [
@@ -17,6 +17,10 @@ export default function AccountScreen() {
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton}>
           <ArrowLeft size={24} color="#1a1a2e" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Account</Text>
+        <TouchableOpacity style={styles.saveButton}>
+          <Save size={20} color="#ffffffff" />
         </TouchableOpacity>
       </View>
 
@@ -247,6 +251,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 5,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#1a1a2e",
+  },
+  saveButton: {
+    padding: 8,
   },
   saveButtonText: {
     color: "#ffffff",

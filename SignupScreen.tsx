@@ -11,6 +11,12 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Mail, Lock, User } from "lucide-react-native";
+import {
+  ALERT_TYPE,
+  Dialog,
+  AlertNotificationRoot,
+  Toast,
+} from "react-native-alert-notification";
 
 const avatarImages = [
   require("./assets/avatar/avatar_1.png"),
@@ -38,69 +44,77 @@ export default function SignupScreen() {
   };
 
   return (
-    <LinearGradient colors={["#667eea", "#764ba2"]} style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.keyboardView}
-      >
-        <View style={styles.content}>
-          <View style={styles.header}>
-            <Text style={styles.title}>Create Account</Text>
-            <Text style={styles.subtitle}>Join Linkly today</Text>
-          </View>
-
-          <View style={styles.avatarSection}>
-            <Image source={selectedAvatar} style={styles.avatar} />
-            <TouchableOpacity
-              style={styles.changeAvatarButton}
-              onPress={selectRandomAvatar}
-            >
-              <Text style={styles.changeAvatarText}>Change Avatar</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.form}>
-            <View style={styles.inputContainer}>
-              <User size={20} color="#667eea" style={styles.inputIcon} />
-              <TextInput
-                style={styles.input}
-                placeholder="Full Name"
-                placeholderTextColor="#999"
-              />
+    <AlertNotificationRoot>
+      <LinearGradient colors={["#667eea", "#764ba2"]} style={styles.container}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.keyboardView}
+        >
+          <View style={styles.content}>
+            <View style={styles.header}>
+              <Text style={styles.title}>Create Account</Text>
+              <Text style={styles.subtitle}>Join Linkly today</Text>
             </View>
 
-            <View style={styles.inputContainer}>
-              <Mail size={20} color="#667eea" style={styles.inputIcon} />
-              <TextInput
-                style={styles.input}
-                placeholder="Email"
-                placeholderTextColor="#999"
-              />
-            </View>
-
-            <View style={styles.inputContainer}>
-              <Lock size={20} color="#667eea" style={styles.inputIcon} />
-              <TextInput
-                style={styles.input}
-                placeholder="Password"
-                placeholderTextColor="#999"
-              />
-            </View>
-
-            <TouchableOpacity style={styles.signupButton}>
-              <Text style={styles.signupButtonText}>Create Account</Text>
-            </TouchableOpacity>
-
-            <View style={styles.footer}>
-              <Text style={styles.footerText}>Already have an account? </Text>
-              <TouchableOpacity>
-                <Text style={styles.linkText}>Sign In</Text>
+            <View style={styles.avatarSection}>
+              <Image source={selectedAvatar} style={styles.avatar} />
+              <TouchableOpacity
+                style={styles.changeAvatarButton}
+                onPress={selectRandomAvatar}
+              >
+                <Text style={styles.changeAvatarText}>Change Avatar</Text>
               </TouchableOpacity>
             </View>
+
+            <View style={styles.form}>
+              <View style={styles.inputContainer}>
+                <User size={20} color="#667eea" style={styles.inputIcon} />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Full Name"
+                  placeholderTextColor="#999"
+                />
+              </View>
+
+              <View style={styles.inputContainer}>
+                <Mail size={20} color="#667eea" style={styles.inputIcon} />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Email"
+                  placeholderTextColor="#999"
+                />
+              </View>
+
+              <View style={styles.inputContainer}>
+                <Lock size={20} color="#667eea" style={styles.inputIcon} />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Password"
+                  placeholderTextColor="#999"
+                />
+              </View>
+
+              <TouchableOpacity style={styles.signupButton} onPress={() => {
+                Toast.show({
+                    type: ALERT_TYPE.SUCCESS,
+                    title: "Success",
+                    textBody: "Registation successful!",
+                  });
+              }}>
+                <Text style={styles.signupButtonText}>Create Account</Text>
+              </TouchableOpacity>
+
+              <View style={styles.footer}>
+                <Text style={styles.footerText}>Already have an account? </Text>
+                <TouchableOpacity>
+                  <Text style={styles.linkText}>Sign In</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
-        </View>
-      </KeyboardAvoidingView>
-    </LinearGradient>
+        </KeyboardAvoidingView>
+      </LinearGradient>
+    </AlertNotificationRoot>
   );
 }
 
