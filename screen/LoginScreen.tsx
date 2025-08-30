@@ -15,8 +15,12 @@ import {
   AlertNotificationRoot,
   Toast,
 } from "react-native-alert-notification";
+import { useNavigation } from "@react-navigation/native";
 
 export default function LoginScreen() {
+
+  const navigation = useNavigation();
+
   return (
     <AlertNotificationRoot>
       <LinearGradient colors={["#667eea", "#764ba2"]} style={styles.container}>
@@ -62,6 +66,7 @@ export default function LoginScreen() {
                   setTimeout(() => {
                     Dialog.hide();
                     console.log("User confirmed signin");
+                    navigation.replace("Home");
                   }, 2000);
                 }}
               >
