@@ -1,7 +1,18 @@
 import { View, Text, StyleSheet, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 export default function SplashScreen() {
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigation.replace("Login");
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [navigation]);
   return (
     <LinearGradient
       colors={["#667eea", "#764ba2", "#f093fb"]}
