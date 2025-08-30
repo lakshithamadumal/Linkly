@@ -18,7 +18,6 @@ import {
 import { useNavigation } from "@react-navigation/native";
 
 export default function LoginScreen() {
-
   const navigation = useNavigation();
 
   return (
@@ -75,7 +74,7 @@ export default function LoginScreen() {
 
               <View style={styles.footer}>
                 <Text style={styles.footerText}>Don't have an account? </Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
                   <Text style={styles.linkText}>Sign Up</Text>
                 </TouchableOpacity>
               </View>
