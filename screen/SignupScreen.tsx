@@ -19,7 +19,6 @@ import {
 } from "react-native-alert-notification";
 import { useNavigation } from "@react-navigation/native";
 
-
 const avatarImages = [
   require("../assets/avatar/avatar_1.png"),
   require("../assets/avatar/avatar_2.png"),
@@ -36,7 +35,7 @@ const avatarImages = [
 ];
 
 export default function SignupScreen() {
-    const navigation = useNavigation();
+  const navigation = useNavigation();
 
   const [selectedAvatar, setSelectedAvatar] = useState(
     avatarImages[Math.floor(Math.random() * avatarImages.length)]
@@ -110,7 +109,7 @@ export default function SignupScreen() {
                   setTimeout(() => {
                     Dialog.hide();
                     console.log("User confirmed registeration");
-                    navigation.navigate("Login")
+                    navigation.navigate("Login" as never);
                   }, 2000);
                 }}
               >
@@ -119,7 +118,9 @@ export default function SignupScreen() {
 
               <View style={styles.footer}>
                 <Text style={styles.footerText}>Already have an account? </Text>
-                <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("Login" as never)}
+                >
                   <Text style={styles.linkText}>Sign In</Text>
                 </TouchableOpacity>
               </View>

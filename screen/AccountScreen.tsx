@@ -6,23 +6,28 @@ import {
   AlertNotificationRoot,
   Toast,
 } from "react-native-alert-notification";
+import { useNavigation } from "@react-navigation/native";
 
 export default function AccountScreen() {
   const Account = [
     {
       Name: "Lakshitha Madumal",
       Email: "mandujayaweera2003@gmail.com",
-      Avatar: require("../assets/avatar/avatar_1.png"), // මෙහෙම වෙනස් කරන්න
+      Avatar: require("../assets/avatar/avatar_1.png"),
     },
   ];
 
   const user = Account[0];
+  const navigation = useNavigation();
 
   return (
     <AlertNotificationRoot>
       <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.navigate("Home" as never)}
+          >
             <ArrowLeft size={24} color="#1a1a2e" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Account</Text>
@@ -46,7 +51,16 @@ export default function AccountScreen() {
               textBody: "Are you sure you want to logout?",
               button: "Yes",
               onPressButton: () => {
-                console.log("User confirmed logout");
+                Dialog.show({
+                  type: ALERT_TYPE.SUCCESS,
+                  title: "Success",
+                  textBody: "Logout Successful!",
+                });
+                setTimeout(() => {
+                  Dialog.hide();
+                  console.log("User confirmed Logout");
+                  navigation.navigate("Login" as never);
+                }, 2000);
               },
             });
           }}

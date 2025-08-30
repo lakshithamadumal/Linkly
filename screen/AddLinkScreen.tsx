@@ -25,8 +25,11 @@ import {
   AlertNotificationRoot,
   Toast,
 } from "react-native-alert-notification";
+import { useNavigation } from "@react-navigation/native";
 
 export default function AddLinkScreen() {
+  const navigation = useNavigation();
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [url, setUrl] = useState("");
@@ -50,7 +53,10 @@ export default function AddLinkScreen() {
     <AlertNotificationRoot>
       <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.navigate("Home" as never)}
+          >
             <ArrowLeft size={24} color="#1a1a2e" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Add New Link</Text>
@@ -152,6 +158,7 @@ export default function AddLinkScreen() {
                 setTimeout(() => {
                   Dialog.hide();
                   console.log("link saved!");
+                  navigation.navigate("Home" as never);
                 }, 2000);
               }}
             >

@@ -1,9 +1,14 @@
 import React from "react";
-import { View, Linking, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import {
-  ArrowLeft,
-  Copy,
-} from "lucide-react-native";
+  View,
+  Linking,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+} from "react-native";
+import { ArrowLeft, Copy } from "lucide-react-native";
+import { useNavigation } from "@react-navigation/native";
 
 export default function LinkPreviewScreen() {
   const mockLinks = [
@@ -17,11 +22,15 @@ export default function LinkPreviewScreen() {
   ];
 
   const link = mockLinks[0];
+  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.navigate("Home" as never)}
+        >
           <ArrowLeft size={24} color="#1a1a2e" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Link Preview</Text>

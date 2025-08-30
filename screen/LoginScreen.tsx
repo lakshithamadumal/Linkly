@@ -65,7 +65,7 @@ export default function LoginScreen() {
                   setTimeout(() => {
                     Dialog.hide();
                     console.log("User confirmed signin");
-                    navigation.replace("Home");
+                    navigation.navigate("Home" as never);
                   }, 2000);
                 }}
               >
@@ -74,7 +74,9 @@ export default function LoginScreen() {
 
               <View style={styles.footer}>
                 <Text style={styles.footerText}>Don't have an account? </Text>
-                <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("SignUp" as never)}
+                >
                   <Text style={styles.linkText}>Sign Up</Text>
                 </TouchableOpacity>
               </View>

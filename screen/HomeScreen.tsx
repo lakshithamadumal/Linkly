@@ -15,6 +15,7 @@ import {
   AlertNotificationRoot,
   Toast,
 } from "react-native-alert-notification";
+import { useNavigation } from "@react-navigation/native";
 
 const mockLinks = [
   {
@@ -27,13 +28,18 @@ const mockLinks = [
 ];
 
 export default function HomeScreen() {
+  const navigation = useNavigation();
+
   return (
     <AlertNotificationRoot>
       <View style={styles.container}>
         <View style={styles.header}>
           <View style={styles.headerContent}>
             <Text style={styles.headerTitle}>My Links</Text>
-            <TouchableOpacity style={styles.profileButton}>
+            <TouchableOpacity
+              style={styles.profileButton}
+              onPress={() => navigation.navigate("Account" as never)}
+            >
               <Image
                 source={require("../assets/avatar/avatar_1.png")}
                 style={styles.profileImage}
@@ -52,6 +58,7 @@ export default function HomeScreen() {
               activeOpacity={0.9}
               onPress={() => {
                 console.log("Link pressed:", item.url);
+                navigation.navigate("PreviewLink" as never);
               }}
               onLongPress={() => {
                 console.log("Link long pressed:", item.url);
@@ -62,11 +69,19 @@ export default function HomeScreen() {
                   button: "Yes",
                   onPressButton: () => {
                     console.log("Link Deleted");
+
                     Dialog.show({
                       type: ALERT_TYPE.SUCCESS,
                       title: "Deleted",
                       textBody: "Link delete Successful!",
                     });
+
+                    setTimeout(() => {
+                      Dialog.hide();
+
+
+                      navigation.navigate("Home" as never);
+                    }, 2000);
                   },
                 });
               }}
@@ -96,7 +111,10 @@ export default function HomeScreen() {
           )}
         />
 
-        <TouchableOpacity style={styles.floatingButtonContainer}>
+        <TouchableOpacity
+          style={styles.floatingButtonContainer}
+          onPress={() => navigation.navigate("AddLink" as never)}
+        >
           <LinearGradient
             colors={["#00C6FF", "#0072FF"]}
             start={{ x: 0, y: 0 }}
