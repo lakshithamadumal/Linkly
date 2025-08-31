@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -20,6 +21,11 @@ import { useNavigation } from "@react-navigation/native";
 export default function LoginScreen() {
   const navigation = useNavigation();
 
+  const [getEmail, setEmail] = React.useState("");
+  const [getPassword, setPassword] = React.useState("");
+
+  const PUBLIC_URL = "https://546394c73d78.ngrok-free.app";
+
   return (
     <AlertNotificationRoot>
       <LinearGradient colors={["#667eea", "#764ba2"]} style={styles.container}>
@@ -40,6 +46,8 @@ export default function LoginScreen() {
                   style={styles.input}
                   placeholder="Email"
                   placeholderTextColor="#999"
+                  value={getEmail}
+                  onChangeText={setEmail}
                 />
               </View>
 
@@ -49,24 +57,59 @@ export default function LoginScreen() {
                   style={styles.input}
                   placeholder="Password"
                   placeholderTextColor="#999"
+                  value={getPassword}
+                  onChangeText={setPassword}
                   secureTextEntry
                 />
               </View>
 
               <TouchableOpacity
                 style={styles.loginButton}
-                onPress={() => {
-                  Dialog.show({
-                    type: ALERT_TYPE.SUCCESS,
-                    title: "Success",
-                    textBody: "Login Successful!",
-                  });
+                onPress={async () => {
+                  const accountDetails = {
+                    email: getEmail,
+                    password: getPassword,
+                  };
 
-                  setTimeout(() => {
-                    Dialog.hide();
-                    console.log("User confirmed signin");
-                    navigation.navigate("Home" as never);
-                  }, 2000);
+                  try {
+                    const response = await fetch(PUBLIC_URL + "/Linkly/Login", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify(accountDetails),
+                    });
+
+                    const data: { status: boolean; message: string } =
+                      await response.json();
+
+                    if (response.ok && data.status) {
+                      Dialog.show({
+                        type: ALERT_TYPE.SUCCESS,
+                        title: "Success",
+                        textBody: data.message || "You are now logged in!",
+                      });
+
+                      setTimeout(() => {
+                        Dialog.hide();
+                        navigation.navigate("Home" as never);
+                      }, 2000);
+                    } else {
+                      Dialog.show({
+                        type: ALERT_TYPE.DANGER,
+                        title: "Login Error",
+                        textBody: data.message,
+                      });
+                    }
+                  } catch (error) {
+                    console.error("Error during login:", error);
+                    Dialog.show({
+                      type: ALERT_TYPE.DANGER,
+                      title: "Login Error",
+                      textBody:
+                        "An error occurred while logging in. Please try again.",
+                    });
+                  }
                 }}
               >
                 <Text style={styles.loginButtonText}>Sign In</Text>
