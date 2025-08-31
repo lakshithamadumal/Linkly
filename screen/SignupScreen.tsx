@@ -20,18 +20,18 @@ import {
 import { useNavigation } from "@react-navigation/native";
 
 const avatarImages = [
-  require("../assets/avatar/avatar_1.png"),
-  require("../assets/avatar/avatar_2.png"),
-  require("../assets/avatar/avatar_3.png"),
-  require("../assets/avatar/avatar_4.png"),
-  require("../assets/avatar/avatar_5.png"),
-  require("../assets/avatar/avatar_6.png"),
-  require("../assets/avatar/avatar_7.png"),
-  require("../assets/avatar/avatar_8.png"),
-  require("../assets/avatar/avatar_9.png"),
-  require("../assets/avatar/avatar_10.png"),
-  require("../assets/avatar/avatar_11.png"),
-  require("../assets/avatar/avatar_12.png"),
+  { name: "avatar_1.png", source: require("../assets/avatar/avatar_1.png") },
+  { name: "avatar_2.png", source: require("../assets/avatar/avatar_2.png") },
+  { name: "avatar_3.png", source: require("../assets/avatar/avatar_3.png") },
+  { name: "avatar_4.png", source: require("../assets/avatar/avatar_4.png") },
+  { name: "avatar_5.png", source: require("../assets/avatar/avatar_5.png") },
+  { name: "avatar_6.png", source: require("../assets/avatar/avatar_6.png") },
+  { name: "avatar_7.png", source: require("../assets/avatar/avatar_7.png") },
+  { name: "avatar_8.png", source: require("../assets/avatar/avatar_8.png") },
+  { name: "avatar_9.png", source: require("../assets/avatar/avatar_9.png") },
+  { name: "avatar_10.png", source: require("../assets/avatar/avatar_10.png") },
+  { name: "avatar_11.png", source: require("../assets/avatar/avatar_11.png") },
+  { name: "avatar_12.png", source: require("../assets/avatar/avatar_12.png") },
 ];
 
 export default function SignupScreen() {
@@ -45,6 +45,13 @@ export default function SignupScreen() {
     const randomIndex = Math.floor(Math.random() * avatarImages.length);
     setSelectedAvatar(avatarImages[randomIndex]);
   };
+
+  const [getFullName, setFullName] = React.useState("");
+  const [getEmail, setEmail] = React.useState("");
+  const [getPassword, setPassword] = React.useState("");
+  const [getImage, setImage] = React.useState("");
+
+  const PUBLIC_URL = "https://546394c73d78.ngrok-free.app";
 
   return (
     <AlertNotificationRoot>
@@ -60,7 +67,7 @@ export default function SignupScreen() {
             </View>
 
             <View style={styles.avatarSection}>
-              <Image source={selectedAvatar} style={styles.avatar} />
+              <Image source={selectedAvatar.source} style={styles.avatar} />
               <TouchableOpacity
                 style={styles.changeAvatarButton}
                 onPress={selectRandomAvatar}
@@ -76,6 +83,8 @@ export default function SignupScreen() {
                   style={styles.input}
                   placeholder="Full Name"
                   placeholderTextColor="#999"
+                  value={getFullName}
+                  onChangeText={setFullName}
                 />
               </View>
 
@@ -85,6 +94,8 @@ export default function SignupScreen() {
                   style={styles.input}
                   placeholder="Email"
                   placeholderTextColor="#999"
+                  value={getEmail}
+                  onChangeText={setEmail}
                 />
               </View>
 
@@ -94,23 +105,67 @@ export default function SignupScreen() {
                   style={styles.input}
                   placeholder="Password"
                   placeholderTextColor="#999"
+                  value={getPassword}
+                  onChangeText={setPassword}
+                  secureTextEntry
                 />
               </View>
 
               <TouchableOpacity
                 style={styles.signupButton}
-                onPress={() => {
-                  Dialog.show({
-                    type: ALERT_TYPE.SUCCESS,
-                    title: "Success",
-                    textBody: "Registation Successful!",
-                  });
+                onPress={async () => {
+                  const account = {
+                    fullName: getFullName,
+                    email: getEmail,
+                    password: getPassword,
+                    profileUrl: selectedAvatar.name,
+                  };
 
-                  setTimeout(() => {
-                    Dialog.hide();
-                    console.log("User confirmed registeration");
-                    navigation.navigate("Login" as never);
-                  }, 2000);
+                  try {
+                    const response = await fetch(
+                      PUBLIC_URL + "/Linkly/CreateAccount",
+                      {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(account),
+                      }
+                    );
+
+                    const data = await response.json();
+
+                    if (response.ok && data.status) {
+                      console.log("Account created successfully:", data);
+                      Dialog.show({
+                        type: ALERT_TYPE.SUCCESS,
+                        title: "Success",
+                        textBody: data.message,
+                      });
+
+                      setTimeout(() => {
+                        Dialog.hide();
+                        console.log("User confirmed registeration");
+                        navigation.navigate("Login" as never);
+                      }, 2000);
+                    } else {
+                      console.error("Failed to create account:", data);
+                      Dialog.show({
+                        type: ALERT_TYPE.DANGER,
+                        title: "Error",
+                        textBody:
+                          data.message ||
+                          "Failed to create account. Please try again.",
+                      });
+                    }
+                  } catch (error) {
+                    console.error("Error creating account:", error);
+                    Dialog.show({
+                      type: ALERT_TYPE.DANGER,
+                      title: "Error",
+                      textBody: "An error occurred. Please try again.",
+                    });
+                  }
                 }}
               >
                 <Text style={styles.signupButtonText}>Create Account</Text>

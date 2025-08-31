@@ -20,10 +20,31 @@ import { useNavigation } from "@react-navigation/native";
 const mockLinks = [
   {
     id: "1",
-    title: "Portfolio",
-    description: "My coding projects and repositories",
+    title: "My Portfolio Website",
+    description: "Showcasing my coding projects and repositories",
     url: "https://iamlaky.online/",
     image: require("../assets/link.png"),
+  },
+  {
+    id: "2",
+    title: "YouTube - React Native Tutorial",
+    description: "Learn how to build mobile apps with React Native",
+    url: "https://www.youtube.com/watch?v=0-S5a0eXPoc",
+    image: require("../assets/youtube.png"),
+  },
+  {
+    id: "3",
+    title: "AliExpress - Smart Watch",
+    description: "Affordable smartwatch with health tracking",
+    url: "https://www.aliexpress.com/item/1005001234567890.html",
+    image: require("../assets/aliexpress.jpg"),
+  },
+  {
+    id: "4",
+    title: "Facebook Post",
+    description: "Motivational tech content shared on Facebook",
+    url: "https://www.facebook.com/lakshitha.mandumal.3/posts/123456789",
+    image: require("../assets/facebook.png"),
   },
 ];
 
@@ -78,7 +99,6 @@ export default function HomeScreen() {
 
                     setTimeout(() => {
                       Dialog.hide();
-
 
                       navigation.navigate("Home" as never);
                     }, 2000);
