@@ -17,14 +17,13 @@ import {
   Toast,
 } from "react-native-alert-notification";
 import { useNavigation } from "@react-navigation/native";
+import { PUBLIC_URL } from "../config";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
 
   const [getEmail, setEmail] = React.useState("");
   const [getPassword, setPassword] = React.useState("");
-
-  const PUBLIC_URL = "https://546394c73d78.ngrok-free.app";
 
   return (
     <AlertNotificationRoot>

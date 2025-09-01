@@ -18,6 +18,7 @@ import {
   Toast,
 } from "react-native-alert-notification";
 import { useNavigation } from "@react-navigation/native";
+import { PUBLIC_URL } from "../config";
 
 const avatarImages = [
   { name: "avatar_1.png", source: require("../assets/avatar/avatar_1.png") },
@@ -50,8 +51,6 @@ export default function SignupScreen() {
   const [getEmail, setEmail] = React.useState("");
   const [getPassword, setPassword] = React.useState("");
   const [getImage, setImage] = React.useState("");
-
-  const PUBLIC_URL = "https://546394c73d78.ngrok-free.app";
 
   return (
     <AlertNotificationRoot>
@@ -149,7 +148,7 @@ export default function SignupScreen() {
                         navigation.navigate("Login" as never);
                       }, 2000);
                     } else {
-                      console.error("Failed to create account:", data);
+                      console.log("Failed to create account:", data);
                       Dialog.show({
                         type: ALERT_TYPE.DANGER,
                         title: "Error",
@@ -159,7 +158,7 @@ export default function SignupScreen() {
                       });
                     }
                   } catch (error) {
-                    console.error("Error creating account:", error);
+                    console.log("Error creating account:", error);
                     Dialog.show({
                       type: ALERT_TYPE.DANGER,
                       title: "Error",
