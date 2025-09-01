@@ -73,7 +73,11 @@ export default function HomeScreen() {
         const data = await response.json();
         setUser(data);
       } catch (e) {
-        console.log("User fetch error:", e);
+        Dialog.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Error",
+          textBody: "User not Found!",
+        });
       }
     };
     fetchUser();
@@ -110,26 +114,47 @@ export default function HomeScreen() {
                 navigation.navigate("PreviewLink" as never);
               }}
               onLongPress={() => {
-                console.log("Link long pressed:", item.url);
                 Dialog.show({
                   type: ALERT_TYPE.WARNING,
                   title: "Delete Link",
                   textBody: "Are you sure you want to delete this link?",
                   button: "Yes",
-                  onPressButton: () => {
-                    console.log("Link Deleted");
+                  onPressButton: async () => {
+                    try {
+                      const response = await fetch(
+                        `${PUBLIC_URL}/Linkly/DeleteLink`,
+                        {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ id: item.id }),
+                        }
+                      );
 
-                    Dialog.show({
-                      type: ALERT_TYPE.SUCCESS,
-                      title: "Deleted",
-                      textBody: "Link delete Successful!",
-                    });
-
-                    setTimeout(() => {
-                      Dialog.hide();
-
-                      navigation.navigate("Home" as never);
-                    }, 2000);
+                      const data = await response.json();
+                      if (data.status) {
+                        Dialog.show({
+                          type: ALERT_TYPE.SUCCESS,
+                          title: "Deleted",
+                          textBody: "Link delete Successful!",
+                        });
+                        setTimeout(() => {
+                          Dialog.hide();
+                          navigation.navigate("Home" as never);
+                        }, 2000);
+                      } else {
+                        Dialog.show({
+                          type: ALERT_TYPE.DANGER,
+                          title: "Error",
+                          textBody: "Link delete failed!",
+                        });
+                      }
+                    } catch (e) {
+                      Dialog.show({
+                        type: ALERT_TYPE.DANGER,
+                        title: "Error",
+                        textBody: "Network error!",
+                      });
+                    }
                   },
                 });
               }}
