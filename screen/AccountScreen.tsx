@@ -46,11 +46,14 @@ export default function AccountScreen() {
       const email = await AsyncStorage.getItem("userEmail");
       if (!email) return;
       try {
-        const response = await fetch(`${PUBLIC_URL}/Linkly/UserDetailsAccount`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email }),
-        });
+        const response = await fetch(
+          `${PUBLIC_URL}/Linkly/UserDetailsAccount`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
+          }
+        );
         const data = await response.json();
         setUser({
           name: data.name,
@@ -103,7 +106,9 @@ export default function AccountScreen() {
               title: "Confirm Logout",
               textBody: "Are you sure you want to logout?",
               button: "Yes",
-              onPressButton: () => {
+              onPressButton: async () => {
+                await AsyncStorage.removeItem("userEmail");
+
                 Dialog.show({
                   type: ALERT_TYPE.SUCCESS,
                   title: "Success",
