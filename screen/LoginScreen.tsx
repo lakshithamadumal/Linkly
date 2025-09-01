@@ -18,6 +18,7 @@ import {
 } from "react-native-alert-notification";
 import { useNavigation } from "@react-navigation/native";
 import { PUBLIC_URL } from "../config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
@@ -88,6 +89,9 @@ export default function LoginScreen() {
                         title: "Success",
                         textBody: data.message || "You are now logged in!",
                       });
+
+                      // Email stored in async storage
+                      await AsyncStorage.setItem("userEmail", getEmail);
 
                       setTimeout(() => {
                         Dialog.hide();

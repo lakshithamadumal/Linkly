@@ -16,6 +16,8 @@ import {
   Toast,
 } from "react-native-alert-notification";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect, useState } from "react";
 
 const mockLinks = [
   {
@@ -25,31 +27,20 @@ const mockLinks = [
     url: "https://iamlaky.online/",
     image: require("../assets/link.png"),
   },
-  {
-    id: "2",
-    title: "YouTube - React Native Tutorial",
-    description: "Learn how to build mobile apps with React Native",
-    url: "https://www.youtube.com/watch?v=0-S5a0eXPoc",
-    image: require("../assets/youtube.png"),
-  },
-  {
-    id: "3",
-    title: "AliExpress - Smart Watch",
-    description: "Affordable smartwatch with health tracking",
-    url: "https://www.aliexpress.com/item/1005001234567890.html",
-    image: require("../assets/aliexpress.jpg"),
-  },
-  {
-    id: "4",
-    title: "Facebook Post",
-    description: "Motivational tech content shared on Facebook",
-    url: "https://www.facebook.com/lakshitha.mandumal.3/posts/123456789",
-    image: require("../assets/facebook.png"),
-  },
 ];
 
 export default function HomeScreen() {
   const navigation = useNavigation();
+  const [userEmail, getUserEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchEmail = async () => {
+      const email = await AsyncStorage.getItem("userEmail");
+      getUserEmail(email);
+      console.log("User Email from AsyncStorage:", email);
+    };
+    fetchEmail();
+  }, []);
 
   return (
     <AlertNotificationRoot>
