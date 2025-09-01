@@ -63,15 +63,13 @@ export default function HomeScreen() {
     const fetchUser = async () => {
       const email = await AsyncStorage.getItem("userEmail");
       if (!email) return;
-
       try {
-        const response = await fetch(
-          `${PUBLIC_URL}/Linkly/UserDetails?email=${encodeURIComponent(email)}`,
-          {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-          }
-        );
+        const response = await fetch(`${PUBLIC_URL}/Linkly/UserDetails`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+
         const data = await response.json();
         setUser(data);
       } catch (e) {
@@ -80,7 +78,6 @@ export default function HomeScreen() {
     };
     fetchUser();
   }, []);
-
 
   return (
     <AlertNotificationRoot>
