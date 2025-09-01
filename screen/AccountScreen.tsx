@@ -1,24 +1,72 @@
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
-import { ArrowLeft, LogOut, Save } from "lucide-react-native";
+import { ArrowLeft, LogOut } from "lucide-react-native";
 import {
   ALERT_TYPE,
   Dialog,
   AlertNotificationRoot,
-  Toast,
 } from "react-native-alert-notification";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { PUBLIC_URL } from "../config";
+
+const avatarMap: Record<string, any> = {
+  "avatar_1.png": require("../assets/avatar/avatar_1.png"),
+  "avatar_2.png": require("../assets/avatar/avatar_2.png"),
+  "avatar_3.png": require("../assets/avatar/avatar_3.png"),
+  "avatar_4.png": require("../assets/avatar/avatar_4.png"),
+  "avatar_5.png": require("../assets/avatar/avatar_5.png"),
+  "avatar_6.png": require("../assets/avatar/avatar_6.png"),
+  "avatar_7.png": require("../assets/avatar/avatar_7.png"),
+  "avatar_8.png": require("../assets/avatar/avatar_8.png"),
+  "avatar_9.png": require("../assets/avatar/avatar_9.png"),
+  "avatar_10.png": require("../assets/avatar/avatar_10.png"),
+  "avatar_11.png": require("../assets/avatar/avatar_11.png"),
+  "avatar_12.png": require("../assets/avatar/avatar_12.png"),
+};
+
+const getAvatarSource = (avatar?: string) => {
+  if (!avatar) return require("../assets/avatar/avatar.png");
+  if (avatar.startsWith("http://") || avatar.startsWith("https://")) {
+    return { uri: avatar };
+  }
+  return avatarMap[avatar] || require("../assets/avatar/avatar.png");
+};
 
 export default function AccountScreen() {
-  const Account = [
-    {
-      Name: "Lakshitha Madumal",
-      Email: "mandujayaweera2003@gmail.com",
-      Avatar: require("../assets/avatar/avatar_3.png"),
-    },
-  ];
-
-  const user = Account[0];
   const navigation = useNavigation();
+  const [user, setUser] = useState<{
+    name: string;
+    email: string;
+    avatar: string;
+  } | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const email = await AsyncStorage.getItem("userEmail");
+      if (!email) return;
+      try {
+        const response = await fetch(`${PUBLIC_URL}/Linkly/UserDetailsAccount`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+        const data = await response.json();
+        setUser({
+          name: data.name,
+          email: data.email,
+          avatar: data.avatar,
+        });
+      } catch (e) {
+        Dialog.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Error",
+          textBody: "User not Found!",
+        });
+      }
+    };
+    fetchUser();
+  }, []);
 
   return (
     <AlertNotificationRoot>
@@ -31,15 +79,20 @@ export default function AccountScreen() {
             <ArrowLeft size={24} color="#1a1a2e" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Account</Text>
-          <TouchableOpacity style={styles.saveButton}>
-            <Save size={20} color="#ffffffff" />
-          </TouchableOpacity>
+          <View style={{ width: 32 }} />
         </View>
 
         <View style={styles.profileSection}>
-          <Image source={user.Avatar} style={styles.profileImage} />
-          <Text style={styles.profileName}>{user.Name}</Text>
-          <Text style={styles.profileEmail}>{user.Email}</Text>
+          <Image
+            source={getAvatarSource(user?.avatar)}
+            style={styles.profileImage}
+          />
+          <Text style={styles.profileName}>
+            {user?.name ? user.name : "Loading..."}
+          </Text>
+          <Text style={styles.profileEmail}>
+            {user?.email ? user.email : "Loading..."}
+          </Text>
         </View>
 
         <TouchableOpacity
@@ -58,7 +111,6 @@ export default function AccountScreen() {
                 });
                 setTimeout(() => {
                   Dialog.hide();
-                  console.log("User confirmed Logout");
                   navigation.navigate("Login" as never);
                 }, 2000);
               },

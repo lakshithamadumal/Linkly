@@ -37,13 +37,13 @@ export default function HomeScreen() {
   };
 
   const getAvatarSource = (avatar?: string) => {
-    if (!avatar) return require("../assets/Linkly_Logo.png");
+    if (!avatar) return require("../assets/avatar/avatar.png");
 
     if (avatar.startsWith("http://") || avatar.startsWith("https://")) {
       return { uri: avatar };
     }
 
-    return avatarMap[avatar] || require("../assets/Linkly_Logo.png");
+    return avatarMap[avatar] || require("../assets/avatar/avatar.png");
   };
 
   const navigation = useNavigation();
