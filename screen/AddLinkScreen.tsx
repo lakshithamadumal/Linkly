@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,15 +10,7 @@ import {
   ScrollView,
   Image,
 } from "react-native";
-import {
-  ArrowLeft,
-  Save,
-  Link,
-  Type,
-  FileText,
-  Image as ImageIcon,
-} from "lucide-react-native";
-import * as ImagePicker from "expo-image-picker";
+import { ArrowLeft, Save, Link, Type } from "lucide-react-native";
 import {
   ALERT_TYPE,
   Dialog,
@@ -26,28 +18,24 @@ import {
   Toast,
 } from "react-native-alert-notification";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { PUBLIC_URL } from "../config";
 
 export default function AddLinkScreen() {
   const navigation = useNavigation();
 
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
   const [url, setUrl] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  const [pickedImage, setPickedImage] = useState(null);
+  const [email, setEmail] = useState<string | null>(null);
 
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setPickedImage(result.assets[0].uri);
-    }
-  };
+  useEffect(() => {
+    const fetchEmail = async () => {
+      const storedEmail = await AsyncStorage.getItem("userEmail");
+      setEmail(storedEmail);
+      console.log("User email from AsyncStorage:", storedEmail);
+    };
+    fetchEmail();
+  }, []);
 
   return (
     <AlertNotificationRoot>
@@ -90,23 +78,6 @@ export default function AddLinkScreen() {
 
             <View style={styles.inputSection}>
               <View style={styles.inputHeader}>
-                <FileText size={20} color="#667eea" />
-                <Text style={styles.inputLabel}>Description (Optional)</Text>
-              </View>
-              <TextInput
-                style={[styles.input, styles.textArea]}
-                placeholder="Enter description"
-                placeholderTextColor="#999"
-                value={description}
-                onChangeText={setDescription}
-                multiline
-                numberOfLines={4}
-                maxLength={500}
-              />
-            </View>
-
-            <View style={styles.inputSection}>
-              <View style={styles.inputHeader}>
                 <Link size={20} color="#667eea" />
                 <Text style={styles.inputLabel}>URL *</Text>
               </View>
@@ -122,44 +93,57 @@ export default function AddLinkScreen() {
               />
             </View>
 
-            <View style={styles.inputSection}>
-              <View style={styles.inputHeader}>
-                <ImageIcon size={20} color="#667eea" />
-                <Text style={styles.inputLabel}>Image (Optional)</Text>
-              </View>
-              <TouchableOpacity
-                style={styles.imagePickerBox}
-                onPress={pickImage}
-                activeOpacity={0.7}
-              >
-                {pickedImage ? (
-                  <Image
-                    source={{ uri: pickedImage }}
-                    style={styles.imagePreview}
-                  />
-                ) : (
-                  <View style={styles.plusIconContainer}>
-                    <ImageIcon size={36} color="#b4b4b4" />
-                    <Text style={styles.imagePickerText}>Add Image</Text>
-                  </View>
-                )}
-              </TouchableOpacity>
-            </View>
-
             <TouchableOpacity
               style={styles.saveButtonLarge}
-              onPress={() => {
-                Dialog.show({
-                  type: ALERT_TYPE.SUCCESS,
-                  title: "Success",
-                  textBody: "Link saved successfully!",
-                });
+              onPress={async () => {
+                if (!email) {
+                  Dialog.show({
+                    type: ALERT_TYPE.DANGER,
+                    title: "Error",
+                    textBody: "User Not Found!",
+                  });
+                  return;
+                }
 
-                setTimeout(() => {
-                  Dialog.hide();
-                  console.log("link saved!");
-                  navigation.navigate("Home" as never);
-                }, 2000);
+                const linkData = {
+                  title: title,
+                  url: url,
+                  email: email,
+                };
+
+                try {
+                  const response = await fetch(`${PUBLIC_URL}/Linkly/AddLink`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(linkData),
+                  });
+
+                  const data = await response.json();
+
+                  if (data.status === true) {
+                    Dialog.show({
+                      type: ALERT_TYPE.SUCCESS,
+                      title: "Success",
+                      textBody: data.message || "Link saved successfully!",
+                    });
+                    setTimeout(() => {
+                      Dialog.hide();
+                      navigation.navigate("Home" as never);
+                    }, 2000);
+                  } else {
+                    Dialog.show({
+                      type: ALERT_TYPE.DANGER,
+                      title: "Error",
+                      textBody: data.message || "Link save failed!",
+                    });
+                  }
+                } catch (e) {
+                  Dialog.show({
+                    type: ALERT_TYPE.DANGER,
+                    title: "Error",
+                    textBody: "Network error!",
+                  });
+                }
               }}
             >
               <Text style={styles.saveButtonText}>Save Link</Text>

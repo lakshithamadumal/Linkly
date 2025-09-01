@@ -6,7 +6,6 @@ import SignupScreen from "./screen/SignupScreen";
 import HomeScreen from "./screen/HomeScreen";
 import AccountScreen from "./screen/AccountScreen";
 import AddLinkScreen from "./screen/AddLinkScreen";
-import LinkPreviewScreen from "./screen/LinkPreviewScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -20,7 +19,6 @@ export default function App() {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Account" component={AccountScreen} />
         <Stack.Screen name="AddLink" component={AddLinkScreen} />
-        <Stack.Screen name="PreviewLink" component={LinkPreviewScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

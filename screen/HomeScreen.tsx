@@ -109,7 +109,10 @@ export default function HomeScreen() {
             <TouchableOpacity
               style={styles.linkCard}
               activeOpacity={0.9}
-
+              onPress={() => {
+                console.log("Link pressed:", item.url);
+                navigation.navigate("PreviewLink" as never);
+              }}
               onLongPress={() => {
                 Dialog.show({
                   type: ALERT_TYPE.WARNING,
@@ -136,7 +139,7 @@ export default function HomeScreen() {
                         });
                         setTimeout(() => {
                           Dialog.hide();
-                          fetchUser(); // <-- Home reload
+                          fetchUser(); 
                         }, 2000);
                       } else {
                         Dialog.show({
