@@ -7,7 +7,7 @@ import {
   FlatList,
   Linking,
 } from "react-native";
-import { Plus, ExternalLink, ArrowUpRight } from "lucide-react-native";
+import { Plus, ArrowUpRight } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   ALERT_TYPE,
@@ -18,29 +18,69 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
-
-const mockLinks = [
-  {
-    id: "1",
-    title: "My Portfolio Website",
-    description: "Showcasing my coding projects and repositories",
-    url: "https://iamlaky.online/",
-    image: require("../assets/link.png"),
-  },
-];
+import { PUBLIC_URL } from "../config";
 
 export default function HomeScreen() {
+  const avatarMap: Record<string, any> = {
+    "avatar_1.png": require("../assets/avatar/avatar_1.png"),
+    "avatar_2.png": require("../assets/avatar/avatar_2.png"),
+    "avatar_3.png": require("../assets/avatar/avatar_3.png"),
+    "avatar_4.png": require("../assets/avatar/avatar_4.png"),
+    "avatar_5.png": require("../assets/avatar/avatar_5.png"),
+    "avatar_6.png": require("../assets/avatar/avatar_6.png"),
+    "avatar_7.png": require("../assets/avatar/avatar_7.png"),
+    "avatar_8.png": require("../assets/avatar/avatar_8.png"),
+    "avatar_9.png": require("../assets/avatar/avatar_9.png"),
+    "avatar_10.png": require("../assets/avatar/avatar_10.png"),
+    "avatar_11.png": require("../assets/avatar/avatar_11.png"),
+    "avatar_12.png": require("../assets/avatar/avatar_12.png"),
+  };
+
+  const getAvatarSource = (avatar?: string) => {
+    if (!avatar) return require("../assets/Linkly_Logo.png");
+
+    if (avatar.startsWith("http://") || avatar.startsWith("https://")) {
+      return { uri: avatar };
+    }
+
+    return avatarMap[avatar] || require("../assets/Linkly_Logo.png");
+  };
+
   const navigation = useNavigation();
-  const [userEmail, getUserEmail] = useState<string | null>(null);
+
+  const [user, setUser] = useState<{
+    email: string;
+    avatar: string;
+    links: Array<{
+      id: string;
+      title: string;
+      description: string;
+      url: string;
+    }>;
+  } | null>(null);
 
   useEffect(() => {
-    const fetchEmail = async () => {
+    const fetchUser = async () => {
       const email = await AsyncStorage.getItem("userEmail");
-      getUserEmail(email);
-      console.log("User Email from AsyncStorage:", email);
+      if (!email) return;
+
+      try {
+        const response = await fetch(
+          `${PUBLIC_URL}/Linkly/UserDetails?email=${encodeURIComponent(email)}`,
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+        const data = await response.json();
+        setUser(data);
+      } catch (e) {
+        console.log("User fetch error:", e);
+      }
     };
-    fetchEmail();
+    fetchUser();
   }, []);
+
 
   return (
     <AlertNotificationRoot>
@@ -53,7 +93,7 @@ export default function HomeScreen() {
               onPress={() => navigation.navigate("Account" as never)}
             >
               <Image
-                source={require("../assets/avatar/avatar_1.png")}
+                source={getAvatarSource(user?.avatar)}
                 style={styles.profileImage}
               />
             </TouchableOpacity>
@@ -62,7 +102,7 @@ export default function HomeScreen() {
 
         <FlatList
           style={{ width: "100%" }}
-          data={mockLinks}
+          data={user?.links || []}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <TouchableOpacity
@@ -98,13 +138,10 @@ export default function HomeScreen() {
               }}
             >
               <View style={styles.linkContent}>
-                {item.image ? (
-                  <Image source={item.image} style={styles.linkImage} />
-                ) : (
-                  <View style={styles.linkImagePlaceholder}>
-                    <ExternalLink size={24} color="#667eea" />
-                  </View>
-                )}
+                <Image
+                  source={require("../assets/link.png")}
+                  style={styles.linkImage}
+                />
                 <View style={styles.linkInfo}>
                   <Text style={styles.linkTitle}>{item.title}</Text>
                   <Text style={styles.linkUrl} numberOfLines={1}>
