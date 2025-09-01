@@ -59,27 +59,27 @@ export default function HomeScreen() {
     }>;
   } | null>(null);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const email = await AsyncStorage.getItem("userEmail");
-      if (!email) return;
-      try {
-        const response = await fetch(`${PUBLIC_URL}/Linkly/UserDetails`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email }),
-        });
+  const fetchUser = async () => {
+    const email = await AsyncStorage.getItem("userEmail");
+    if (!email) return;
+    try {
+      const response = await fetch(`${PUBLIC_URL}/Linkly/UserDetails`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await response.json();
+      setUser(data);
+    } catch (e) {
+      Dialog.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Error",
+        textBody: "User not Found!",
+      });
+    }
+  };
 
-        const data = await response.json();
-        setUser(data);
-      } catch (e) {
-        Dialog.show({
-          type: ALERT_TYPE.DANGER,
-          title: "Error",
-          textBody: "User not Found!",
-        });
-      }
-    };
+  useEffect(() => {
     fetchUser();
   }, []);
 
@@ -109,10 +109,7 @@ export default function HomeScreen() {
             <TouchableOpacity
               style={styles.linkCard}
               activeOpacity={0.9}
-              onPress={() => {
-                console.log("Link pressed:", item.url);
-                navigation.navigate("PreviewLink" as never);
-              }}
+
               onLongPress={() => {
                 Dialog.show({
                   type: ALERT_TYPE.WARNING,
@@ -139,7 +136,7 @@ export default function HomeScreen() {
                         });
                         setTimeout(() => {
                           Dialog.hide();
-                          navigation.navigate("Home" as never);
+                          fetchUser(); // <-- Home reload
                         }, 2000);
                       } else {
                         Dialog.show({
