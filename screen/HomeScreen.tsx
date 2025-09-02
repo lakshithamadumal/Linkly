@@ -109,10 +109,10 @@ export default function HomeScreen() {
             <TouchableOpacity
               style={styles.linkCard}
               activeOpacity={0.9}
-              onPress={() => {
-                console.log("Link pressed:", item.url);
-                navigation.navigate("PreviewLink" as never);
-              }}
+              // onPress={() => {
+              //   console.log("Link pressed:", item.url);
+              //   navigation.navigate("PreviewLink" as never);
+              // }}
               onLongPress={() => {
                 Dialog.show({
                   type: ALERT_TYPE.WARNING,
